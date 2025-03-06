@@ -1,10 +1,10 @@
-const { Department } = require('../models/department');
+const  Department  = require('../models/department');
 
 
 const registerDepartment = async (req, res) => {
     try {
-        const { name } = req.body;
-        const department = await Department.create({ name });
+        const { name,program_id } = req.body;
+        const department = await Department.create({ name,program_id });
         return res.status(201).json({ message: "Department registered successfully", department });
     } catch (error) {
         return res.status(500).json({ error: error.message });

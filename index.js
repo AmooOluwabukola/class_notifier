@@ -39,7 +39,8 @@ app.get("/", (req, res) => {
 });
 
 // Database connection & sync models
-connectDB().then(() => syncModels());
+connectDB()
+// .then(() => syncModels());
 
 // Start Express server
 app.listen(PORT, () => {

@@ -3,7 +3,7 @@ CREATE TABLE students (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    telegram_id VARCHAR(50) UNIQUE NOT NULL,
+    telegram_id INT UNIQUE NOT NULL,
     program_id INT NOT NULL,
     department_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -34,7 +34,7 @@ CREATE TABLE lecturers (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    telegram_id VARCHAR(50) UNIQUE NOT NULL
+    telegram_id INT  UNIQUE NOT NULL
 );
 
 -- Course-Lecturer Relationship Table

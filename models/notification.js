@@ -1,82 +1,42 @@
-// const { pool } = require('../config/db');
+// const { DataTypes } = require('sequelize');
+// const { sequelize } = require('../config/db');
 
-// const createNotificationTable = async () => {
-//     try {
-//         const query = `
-//             CREATE TABLE IF NOT EXISTS notifications (
-//                 id SERIAL PRIMARY KEY,
-//                 message TEXT NOT NULL,
-//                 student_id INT NOT NULL,
-//                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-//             );
-//         `;
-//         await pool.query(query);
-//         console.log("✅ Notification table checked/created.");
-//     } catch (error) {
-//         console.error("❌ Error creating notification table:", error);
-//     }
-// };
+// const ClassNotification = sequelize.define('ClassNotification', {
+//     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+//     message: { type: DataTypes.TEXT, allowNull: false },
+//     course_id: { type: DataTypes.INTEGER, allowNull: false },
+//     lecturer_id: { type: DataTypes.INTEGER, allowNull: false },
+//     timestamp: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+// }, { timestamps: false });
 
-// // Notification Model
-// const Notification = {
-//     create: async ({ message, student_id }) => {
-//         try {
-//             const query = `
-//                 INSERT INTO notifications (message, student_id)
-//                 VALUES ($1, $2) RETURNING *;
-//             `;
-//             const values = [message, student_id];
-//             const result = await pool.query(query, values);
-//             return result.rows[0];
-//         } catch (error) {
-//             console.error("❌ Error creating notification:", error);
-//             throw error;
-//         }
-//     },
-
-//     findAll: async () => {
-//         try {
-//             const result = await pool.query("SELECT * FROM notifications;");
-//             return result.rows;
-//         } catch (error) {
-//             console.error("❌ Error fetching notifications:", error);
-//             throw error;
-//         }
-//     },
-
-//     findByStudentId: async (student_id) => {
-//         try {
-//             const result = await pool.query("SELECT * FROM notifications WHERE student_id = $1;", [student_id]);
-//             return result.rows;
-//         } catch (error) {
-//             console.error("❌ Error fetching notifications:", error);
-//             throw error;
-//         }
-//     },
-
-//     delete: async (id) => {
-//         try {
-//             await pool.query("DELETE FROM notifications WHERE id = $1;", [id]);
-//             return { message: "Notification deleted successfully." };
-//         } catch (error) {
-//             console.error("❌ Error deleting notification:", error);
-//             throw error;
-//         }
-//     }
-// };
-
-// module.exports = { Notification, createNotificationTable };
+// module.exports = ClassNotification;
 
 
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/db');
+const { DataTypes } = require("sequelize");
+const {sequelize} = require("../config/db");
+const Student = require("./student");
+const Course = require("./course");
+const Lecturer = require("./lecturer");
 
-const ClassNotification = sequelize.define('ClassNotification', {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    message: { type: DataTypes.TEXT, allowNull: false },
-    course_id: { type: DataTypes.INTEGER, allowNull: false },
-    lecturer_id: { type: DataTypes.INTEGER, allowNull: false },
-    timestamp: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
-}, { timestamps: false });
+const ClassNotification = sequelize.define("ClassNotification", {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  notification_time: { type: DataTypes.DATE, allowNull: false },
+  status: { 
+    type: DataTypes.ENUM("Pending", "Sent"),
+    allowNull: false,
+    defaultValue: "Pending"
+  }
+});
+
+// Class Notification Associations
+Student.hasMany(ClassNotification, { foreignKey: "student_id" });
+ClassNotification.belongsTo(Student, { foreignKey: "student_id" });
+
+Course.hasMany(ClassNotification, { foreignKey: "course_id" });
+ClassNotification.belongsTo(Course, { foreignKey: "course_id" });
+
+Lecturer.hasMany(ClassNotification, { foreignKey: "lecturer_id" });
+ClassNotification.belongsTo(Lecturer, { foreignKey: "lecturer_id" });
 
 module.exports = ClassNotification;
+

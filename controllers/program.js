@@ -1,11 +1,13 @@
-const { Program } = require('../models/program');
+const Program  = require('../models/program');
+
+console.log(Program);
 
 
 // Register a new program
 const registerProgram = async (req, res) => {
     try {
-        const { name, department_id } = req.body;
-        const program = await Program.create({ name, department_id });
+        const { name} = req.body;
+        const program = await Program.create({ name });
         return res.status(201).json({ message: "Program registered successfully", program });
     } catch (error) {
         return res.status(500).json({ error: error.message });
